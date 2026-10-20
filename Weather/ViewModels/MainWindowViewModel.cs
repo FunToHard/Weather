@@ -14,11 +14,22 @@ public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly OpenMeteoWeatherService _weatherService = new();
 
+    public event Action<double, double>? LocationChanged;
+
     [ObservableProperty]
     private string _city = "San Francisco, CA";
 
     [ObservableProperty]
     private string _searchQuery = "San Francisco, CA";
+
+    [ObservableProperty]
+    private double _latitude = 37.7749;
+
+    [ObservableProperty]
+    private double _longitude = -122.4194;
+
+    [ObservableProperty]
+    private string _coordinatesDisplay = "37.77° N, 122.42° W";
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CurrentTempDisplay))]
@@ -69,6 +80,24 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _airQualityStatus = "Good";
 
     [ObservableProperty]
+    private string _pressure = "1013 hPa";
+
+    [ObservableProperty]
+    private double _pressureValue = 1013.0;
+
+    [ObservableProperty]
+    private string _pressureStatus = "Steady";
+
+    [ObservableProperty]
+    private string _visibility = "16 mi";
+
+    [ObservableProperty]
+    private double _visibilityValue = 16.0;
+
+    [ObservableProperty]
+    private string _visibilityStatus = "Clear";
+
+    [ObservableProperty]
     private string _sunrise = "6:42 AM";
 
     [ObservableProperty]
@@ -114,46 +143,8 @@ public partial class MainWindowViewModel : ViewModelBase
             var liveData = await _weatherService.FetchWeatherAsync(query);
             if (liveData != null)
             {
-                City = liveData.FormattedCity;
-                SearchQuery = liveData.FormattedCity;
-                CurrentTemp = liveData.CurrentTemp;
-                Condition = liveData.Condition;
-                HeroIconPath = liveData.HeroIconPath;
-                TempRange = liveData.TempRange;
-                WindSpeed = $"{liveData.WindSpeed} mph";
-                WindAngle = liveData.WindAngle;
-                WindDirection = liveData.WindDirection;
-                Humidity = $"{liveData.Humidity}%";
-                HumidityValue = liveData.Humidity;
-                UvIndex = liveData.UvIndex.ToString("0.#", CultureInfo.InvariantCulture);
-                UvIndexValue = liveData.UvIndex;
-                UvLevel = liveData.UvLevel;
-                AirQuality = liveData.Aqi.ToString();
-                AqiValue = liveData.Aqi;
-                AirQualityStatus = liveData.AqiStatus;
-                Sunrise = liveData.Sunrise;
-                Sunset = liveData.Sunset;
-                DaylightDuration = liveData.DaylightDuration;
-                DaylightStatus = liveData.DaylightStatus;
-
-                if (liveData.DailyForecasts.Count > 0)
-                {
-                    DailyForecasts.Clear();
-                    foreach (var d in liveData.DailyForecasts)
-                        DailyForecasts.Add(d);
-                }
-
-                if (liveData.HourlyForecasts.Count > 0)
-                {
-                    HourlyForecasts.Clear();
-                    foreach (var h in liveData.HourlyForecasts)
-                        HourlyForecasts.Add(h);
-                }
-
-                if (liveData.HourlyTemps.Count > 0)
-                {
-                    HourlyTemps = liveData.HourlyTemps;
-                }
+                ApplyWeatherData(liveData);
+                LocationChanged?.Invoke(liveData.Latitude, liveData.Longitude);
             }
         }
         catch
@@ -164,6 +155,89 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             IsLoading = false;
         }
+    }
+
+    public async Task LoadWeatherByCoordinatesAsync(double latitude, double longitude)
+    {
+        IsLoading = true;
+        try
+        {
+            var liveData = await _weatherService.FetchWeatherByCoordinatesAsync(latitude, longitude);
+            if (liveData != null)
+            {
+                ApplyWeatherData(liveData);
+                // No need to fire LocationChanged when triggered by map click, as the map is already there
+            }
+        }
+        catch
+        {
+            // Retain existing data if request fails
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void ApplyWeatherData(LiveWeatherData liveData)
+    {
+        City = liveData.FormattedCity;
+        SearchQuery = liveData.FormattedCity;
+        Latitude = liveData.Latitude;
+        Longitude = liveData.Longitude;
+        CoordinatesDisplay = FormatCoordinates(liveData.Latitude, liveData.Longitude);
+
+        CurrentTemp = liveData.CurrentTemp;
+        Condition = liveData.Condition;
+        HeroIconPath = liveData.HeroIconPath;
+        TempRange = liveData.TempRange;
+        WindSpeed = $"{liveData.WindSpeed} mph";
+        WindAngle = liveData.WindAngle;
+        WindDirection = liveData.WindDirection;
+        Humidity = $"{liveData.Humidity}%";
+        HumidityValue = liveData.Humidity;
+        UvIndex = liveData.UvIndex.ToString("0.#", CultureInfo.InvariantCulture);
+        UvIndexValue = liveData.UvIndex;
+        UvLevel = liveData.UvLevel;
+        AirQuality = liveData.Aqi.ToString();
+        AqiValue = liveData.Aqi;
+        AirQualityStatus = liveData.AqiStatus;
+        Pressure = liveData.PressureDisplay;
+        PressureValue = liveData.Pressure;
+        PressureStatus = liveData.PressureStatus;
+        Visibility = liveData.VisibilityDisplay;
+        VisibilityValue = liveData.Visibility;
+        VisibilityStatus = liveData.VisibilityStatus;
+        Sunrise = liveData.Sunrise;
+        Sunset = liveData.Sunset;
+        DaylightDuration = liveData.DaylightDuration;
+        DaylightStatus = liveData.DaylightStatus;
+
+        if (liveData.DailyForecasts.Count > 0)
+        {
+            DailyForecasts.Clear();
+            foreach (var d in liveData.DailyForecasts)
+                DailyForecasts.Add(d);
+        }
+
+        if (liveData.HourlyForecasts.Count > 0)
+        {
+            HourlyForecasts.Clear();
+            foreach (var h in liveData.HourlyForecasts)
+                HourlyForecasts.Add(h);
+        }
+
+        if (liveData.HourlyTemps.Count > 0)
+        {
+            HourlyTemps = liveData.HourlyTemps;
+        }
+    }
+
+    private static string FormatCoordinates(double lat, double lon)
+    {
+        string latDir = lat >= 0 ? "N" : "S";
+        string lonDir = lon >= 0 ? "E" : "W";
+        return FormattableString.Invariant($"{Math.Abs(lat):F2}° {latDir}, {Math.Abs(lon):F2}° {lonDir}");
     }
 
     private void LoadDemoWeatherData()

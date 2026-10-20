@@ -13,6 +13,8 @@ namespace Weather.Services;
 public record LiveWeatherData
 {
     public required string FormattedCity { get; init; }
+    public required double Latitude { get; init; }
+    public required double Longitude { get; init; }
     public required int CurrentTemp { get; init; }
     public required string Condition { get; init; }
     public required string HeroIconPath { get; init; }
@@ -25,6 +27,12 @@ public record LiveWeatherData
     public required string UvLevel { get; init; }
     public required int Aqi { get; init; }
     public required string AqiStatus { get; init; }
+    public required double Pressure { get; init; }
+    public required string PressureDisplay { get; init; }
+    public required string PressureStatus { get; init; }
+    public required double Visibility { get; init; }
+    public required string VisibilityDisplay { get; init; }
+    public required string VisibilityStatus { get; init; }
     public required string Sunrise { get; init; }
     public required string Sunset { get; init; }
     public required string DaylightDuration { get; init; }
@@ -56,9 +64,64 @@ public class OpenMeteoWeatherService
                 ? $"{loc.Name}, {loc.CountryCode}"
                 : $"{loc.Name}, {loc.Admin1}";
 
-            // 2. Forecast API
+            return await FetchWeatherByCoordinatesInternalAsync(loc.Latitude, loc.Longitude, cityDisplay, cancellationToken);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<LiveWeatherData?> FetchWeatherByCoordinatesAsync(double latitude, double longitude, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            // Reverse Geocode using BigDataCloud free client API (0 API key)
+            string cityDisplay = FormattableString.Invariant($"{latitude:F2}°, {longitude:F2}°");
+            try
+            {
+                string revUrl = FormattableString.Invariant(
+                    $"https://api.bigdatacloud.net/data/reverse-geocode-client?latitude={latitude}&longitude={longitude}&localityLanguage=en");
+                string revJson = await HttpClient.GetStringAsync(revUrl, cancellationToken);
+                var rev = JsonSerializer.Deserialize<ReverseGeocodeResult>(revJson, JsonOptions);
+                if (rev != null)
+                {
+                    string city = !string.IsNullOrWhiteSpace(rev.City) ? rev.City : (rev.Locality ?? "");
+                    string admin = !string.IsNullOrWhiteSpace(rev.PrincipalSubdivision) ? rev.PrincipalSubdivision : (rev.CountryCode ?? "");
+                    if (!string.IsNullOrWhiteSpace(city))
+                    {
+                        cityDisplay = !string.IsNullOrWhiteSpace(admin) ? $"{city}, {admin}" : city;
+                    }
+                    else if (!string.IsNullOrWhiteSpace(rev.CountryName))
+                    {
+                        cityDisplay = rev.CountryName;
+                    }
+                }
+            }
+            catch
+            {
+                // Non-fatal, use coordinates fallback
+            }
+
+            return await FetchWeatherByCoordinatesInternalAsync(latitude, longitude, cityDisplay, cancellationToken);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private async Task<LiveWeatherData?> FetchWeatherByCoordinatesInternalAsync(
+        double latitude,
+        double longitude,
+        string cityDisplay,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            // 2. Forecast API with current, hourly, and daily metrics
             string forecastUrl = FormattableString.Invariant(
-                $"https://api.open-meteo.com/v1/forecast?latitude={loc.Latitude}&longitude={loc.Longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto&temperature_unit=fahrenheit&wind_speed_unit=mph");
+                $"https://api.open-meteo.com/v1/forecast?latitude={latitude}&longitude={longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,wind_direction_10m,pressure_msl,surface_pressure,visibility&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=auto&temperature_unit=fahrenheit&wind_speed_unit=mph");
             string forecastJson = await HttpClient.GetStringAsync(forecastUrl, cancellationToken);
             var forecast = JsonSerializer.Deserialize<ForecastResponse>(forecastJson, JsonOptions);
 
@@ -71,7 +134,7 @@ public class OpenMeteoWeatherService
             try
             {
                 string aqiUrl = FormattableString.Invariant(
-                    $"https://air-quality-api.open-meteo.com/v1/air-quality?latitude={loc.Latitude}&longitude={loc.Longitude}&current=us_aqi");
+                    $"https://air-quality-api.open-meteo.com/v1/air-quality?latitude={latitude}&longitude={longitude}&current=us_aqi");
                 string aqiJson = await HttpClient.GetStringAsync(aqiUrl, cancellationToken);
                 var aqiResp = JsonSerializer.Deserialize<AirQualityResponse>(aqiJson, JsonOptions);
                 if (aqiResp?.Current?.UsAqi != null)
@@ -98,6 +161,28 @@ public class OpenMeteoWeatherService
             string windDir = DegreesToCardinal(windAngle);
             double windSpeed = Math.Round(forecast.Current.WindSpeed10m, 1);
             int humidity = (int)Math.Round(forecast.Current.RelativeHumidity2m);
+
+            // Pressure & Visibility metrics
+            double pressure = forecast.Current.PressureMsl ?? forecast.Current.SurfacePressure ?? 1013.25;
+            double roundedPressure = Math.Round(pressure, 0);
+            string pressureDisplay = $"{roundedPressure:0} hPa";
+            string pressureStatus = pressure switch
+            {
+                < 1005 => "Low",
+                <= 1022 => "Steady",
+                _ => "High"
+            };
+
+            double visMeters = forecast.Current.Visibility ?? 16000.0;
+            double visMiles = Math.Round(visMeters / 1609.34, 1);
+            string visDisplay = $"{visMiles:0.#} mi";
+            string visStatus = visMiles switch
+            {
+                < 3 => "Poor",
+                < 6 => "Moderate",
+                < 10 => "Good",
+                _ => "Clear"
+            };
 
             // UV
             double uvIndex = forecast.Daily.UvIndexMax != null && forecast.Daily.UvIndexMax.Count > 0
@@ -180,7 +265,6 @@ public class OpenMeteoWeatherService
             var hourlyTemps = new List<double>();
             if (forecast.Hourly.Time != null && forecast.Hourly.Temperature2m != null)
             {
-                // Find current hour index
                 int startIndex = 0;
                 string nowIsoPrefix = DateTime.Now.ToString("yyyy-MM-ddTHH:00");
                 for (int i = 0; i < forecast.Hourly.Time.Count; i++)
@@ -221,6 +305,8 @@ public class OpenMeteoWeatherService
             return new LiveWeatherData
             {
                 FormattedCity = cityDisplay,
+                Latitude = latitude,
+                Longitude = longitude,
                 CurrentTemp = curTemp,
                 Condition = condText,
                 HeroIconPath = condIcon,
@@ -233,6 +319,12 @@ public class OpenMeteoWeatherService
                 UvLevel = uvLevel,
                 Aqi = aqi,
                 AqiStatus = aqiStatus,
+                Pressure = roundedPressure,
+                PressureDisplay = pressureDisplay,
+                PressureStatus = pressureStatus,
+                Visibility = visMiles,
+                VisibilityDisplay = visDisplay,
+                VisibilityStatus = visStatus,
                 Sunrise = sunriseStr,
                 Sunset = sunsetStr,
                 DaylightDuration = daylightDuration,
@@ -276,6 +368,18 @@ public class OpenMeteoWeatherService
 }
 
 // JSON DTOs
+public class ReverseGeocodeResult
+{
+    public string? City { get; set; }
+    public string? Locality { get; set; }
+    [JsonPropertyName("principalSubdivision")]
+    public string? PrincipalSubdivision { get; set; }
+    [JsonPropertyName("countryName")]
+    public string? CountryName { get; set; }
+    [JsonPropertyName("countryCode")]
+    public string? CountryCode { get; set; }
+}
+
 public class GeocodingResponse
 {
     public List<GeocodingLocation>? Results { get; set; }
@@ -310,6 +414,12 @@ public class CurrentWeather
     public double WindSpeed10m { get; set; }
     [JsonPropertyName("wind_direction_10m")]
     public double WindDirection10m { get; set; }
+    [JsonPropertyName("pressure_msl")]
+    public double? PressureMsl { get; set; }
+    [JsonPropertyName("surface_pressure")]
+    public double? SurfacePressure { get; set; }
+    [JsonPropertyName("visibility")]
+    public double? Visibility { get; set; }
 }
 
 public class DailyWeather
