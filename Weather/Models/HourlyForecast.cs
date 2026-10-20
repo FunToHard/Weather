@@ -1,6 +1,6 @@
 namespace Weather.Models;
 
-public class HourlyForecast
+public record HourlyForecast
 {
     public required string Time { get; init; }
     public required int Temperature { get; init; }

@@ -14,7 +14,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _searchQuery = "San Francisco, CA";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CurrentTempDisplay))]
     private int _currentTemp = 72;
+
+    public string CurrentTempDisplay => $"{CurrentTemp}°";
 
     [ObservableProperty]
     private string _condition = "Partly Cloudy";

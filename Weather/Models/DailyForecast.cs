@@ -1,6 +1,6 @@
 namespace Weather.Models;
 
-public class DailyForecast
+public record DailyForecast
 {
     public required string Day { get; init; }
     public required string Date { get; init; }

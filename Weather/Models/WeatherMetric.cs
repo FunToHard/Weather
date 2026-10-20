@@ -1,6 +1,6 @@
 namespace Weather.Models;
 
-public class WeatherMetric
+public record WeatherMetric
 {
     public required string Title { get; init; }
     public required string Value { get; init; }
