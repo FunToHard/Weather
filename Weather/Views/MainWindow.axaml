@@ -3,18 +3,89 @@
         xmlns:vm="using:Weather.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="650"
         x:Class="Weather.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Weather">
+        Title="Weather"
+        Width="1000" Height="650"
+        MinWidth="720" MinHeight="480"
+        WindowStartupLocation="CenterScreen"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        TransparencyLevelHint="AcrylicBlur, Mica"
+        Background="Transparent">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Window.Styles>
+        <Style Selector="Window[ActualTransparencyLevel=None]">
+            <Setter Property="Background" Value="{DynamicResource SystemRegionBrush}" />
+        </Style>
+    </Window.Styles>
 
+    <Panel Margin="{Binding $parent[Window].OffScreenMargin}">
+        <!-- Background tint layer that lets backdrop blur shine through with comfortable contrast -->
+        <Border Background="{DynamicResource SystemAltHighColor}"
+                Opacity="0.45"
+                IsHitTestVisible="False" />
+
+        <Grid RowDefinitions="Auto,*">
+            <!-- Custom Titlebar Area (Draggable) -->
+            <Border Grid.Row="0"
+                    Height="36"
+                    Background="Transparent"
+                    PointerPressed="TitleBar_PointerPressed">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+                    <!-- App branding -->
+                    <StackPanel Grid.Column="0"
+                                Orientation="Horizontal"
+                                VerticalAlignment="Center"
+                                Margin="16,0,0,0"
+                                Spacing="10"
+                                IsHitTestVisible="False">
+                        <Image Source="/Assets/avalonia-logo.ico"
+                               Width="18"
+                               Height="18"
+                               VerticalAlignment="Center" />
+                        <TextBlock Text="Weather"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"
+                                   Opacity="0.8" />
+                    </StackPanel>
+
+                    <!-- Draggable center area -->
+                    <Panel Grid.Column="1" Background="Transparent" />
+
+                    <!-- Native caption buttons are placed on the right by Windows via PreferSystemChrome -->
+                </Grid>
+            </Border>
+
+            <!-- Main Content Area -->
+            <Grid Grid.Row="1" Margin="24,12,24,24">
+                <Border CornerRadius="12"
+                        Background="{DynamicResource SystemAltLowColor}"
+                        BorderBrush="{DynamicResource SystemBaseLowColor}"
+                        BorderThickness="1"
+                        Padding="24">
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Spacing="12">
+                        <TextBlock Text="Weather Showcase"
+                                   FontSize="24"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="Window chrome extended to titlebar with native backdrop blur active."
+                                   FontSize="14"
+                                   Opacity="0.75"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+    </Panel>
 </Window>
