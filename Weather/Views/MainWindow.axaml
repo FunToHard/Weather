@@ -59,50 +59,55 @@
                                  VerticalAlignment="Center" />
                     </Border>
 
-                    <!-- Column 1: Center Draggable Space with Search & Location -->
+                    <!-- Column 1: Center Draggable Space with Unified Search Bar (matches screenshot) -->
                     <Grid Grid.Column="1"
                           ColumnDefinitions="*,Auto,*"
                           Background="Transparent"
                           PointerPressed="TitleBar_PointerPressed">
-                        <!-- Centered Search Box and Location Chip -->
-                        <StackPanel Grid.Column="1"
-                                    Orientation="Horizontal"
-                                    Spacing="10"
-                                    VerticalAlignment="Center">
-                            <TextBox Classes="GlassSearch"
-                                     Width="280"
-                                     Height="32"
-                                     Watermark="Search city or location..."
-                                     Text="{Binding SearchQuery}">
-                                <TextBox.InnerLeftContent>
-                                    <svg:Svg Path="/Assets/Icons/search.svg"
-                                             Width="14"
-                                             Height="14"
-                                             Margin="10,0,4,0"
-                                             Opacity="0.65" />
-                                </TextBox.InnerLeftContent>
-                                <TextBox.KeyBindings>
-                                    <KeyBinding Gesture="Enter" Command="{Binding SearchCommand}" />
-                                </TextBox.KeyBindings>
-                            </TextBox>
+                        <!-- Unified Search Bar Outer Pill -->
+                        <Border Grid.Column="1"
+                                Width="520"
+                                Height="36"
+                                CornerRadius="8"
+                                Background="#32FFFFFF"
+                                BorderBrush="#65FFFFFF"
+                                BorderThickness="1"
+                                VerticalAlignment="Center">
+                            <Grid ColumnDefinitions="Auto,*,Auto">
+                                <!-- Search Icon -->
+                                <svg:Svg Grid.Column="0"
+                                         Path="/Assets/Icons/search.svg"
+                                         Width="15"
+                                         Height="15"
+                                         Margin="12,0,8,0"
+                                         VerticalAlignment="Center"
+                                         Opacity="0.65" />
 
-                            <Border Classes="GlassPill"
-                                    Padding="10,0"
-                                    Height="32"
-                                    VerticalAlignment="Center">
-                                <StackPanel Orientation="Horizontal"
-                                            Spacing="6"
-                                            VerticalAlignment="Center">
-                                    <svg:Svg Path="/Assets/Icons/location.svg"
-                                             Width="14"
-                                             Height="14" />
+                                <!-- Transparent Text Input -->
+                                <TextBox Grid.Column="1"
+                                         Classes="TransparentSearch"
+                                         Watermark="Search city or location..."
+                                         Text="{Binding SearchQuery}">
+                                    <TextBox.KeyBindings>
+                                        <KeyBinding Gesture="Enter" Command="{Binding SearchCommand}" />
+                                    </TextBox.KeyBindings>
+                                </TextBox>
+
+                                <!-- Right-nested Location Pill Badge -->
+                                <Border Grid.Column="2"
+                                        CornerRadius="6"
+                                        Background="#D8E2EE"
+                                        Padding="12,3"
+                                        Margin="4"
+                                        VerticalAlignment="Center">
                                     <TextBlock Text="{Binding City}"
-                                               FontSize="12"
+                                               FontSize="13"
                                                FontWeight="Medium"
+                                               Foreground="#1E293B"
                                                VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Border>
-                        </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
                     </Grid>
 
                     <!-- Column 2: System Caption Buttons Safe Reservation (~140 DIPs) -->
