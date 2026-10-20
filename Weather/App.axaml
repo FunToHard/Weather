@@ -44,6 +44,17 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="18" />
             <Setter Property="Padding" Value="12,6,12,6" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBox.GlassSearch:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#45FFFFFF" />
+            <Setter Property="BorderBrush" Value="#80FFFFFF" />
+        </Style>
+
+        <Style Selector="TextBox.GlassSearch:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#50FFFFFF" />
+            <Setter Property="BorderBrush" Value="#A0FFFFFF" />
         </Style>
     </Application.Styles>
 </Application>
