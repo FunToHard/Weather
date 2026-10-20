@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="dropGrad" x1="16" y1="12" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#0284C7" />
+    </linearGradient>
+  </defs>
+  <!-- Water Drop -->
+  <path d="M32 10C32 10 14 31.43 14 41.57C14 51.5 22.06 54 32 54C41.94 54 50 51.5 50 41.57C50 31.43 32 10 32 10Z" fill="url(#dropGrad)" />
+  <!-- Droplet highlight -->
+  <path d="M24 38C24 32 28 26 31 22" stroke="#BAE6FD" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Percentage wave symbol -->
+  <circle cx="28" cy="40" r="2.5" fill="#FFFFFF" />
+  <circle cx="36" cy="46" r="2.5" fill="#FFFFFF" />
+  <line x1="38" y1="38" x2="26" y2="48" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" />
+</svg>

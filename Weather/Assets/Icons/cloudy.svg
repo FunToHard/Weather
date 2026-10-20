@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="backCloudGrad" x1="20" y1="18" x2="52" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#94A3B8" />
+    </linearGradient>
+    <linearGradient id="frontCloudGrad" x1="12" y1="28" x2="48" y2="52" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+  </defs>
+  <!-- Back cloud -->
+  <path d="M47 38H28C24.69 38 22 35.31 22 32C22 28.85 24.41 26.27 27.5 26.02C28.49 21.73 32.36 18.5 37 18.5C42.33 18.5 46.77 22.6 47.42 27.82C50 28.23 52 30.46 52 33.12C52 35.82 49.99 38 47 38Z" fill="url(#backCloudGrad)" opacity="0.8" />
+  <!-- Front cloud -->
+  <path d="M44 50H18C14.13 50 11 46.87 11 43C11 39.32 13.82 36.31 17.42 36.03C18.58 31.02 23.09 27.25 28.5 27.25C34.72 27.25 39.89 32.03 40.65 38.12C43.66 38.61 46 41.2 46 44.31C46 47.45 43.65 50 44 50Z" fill="url(#frontCloudGrad)" />
+</svg>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="leafGrad" x1="16" y1="16" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+  <!-- Leaf -->
+  <path d="M48 16C32 16 20 28 20 44C36 44 48 32 48 16Z" fill="url(#leafGrad)" />
+  <!-- Leaf Stem -->
+  <path d="M20 44C26 38 34 30 48 16" stroke="#A7F3D0" stroke-width="2.5" stroke-linecap="round" />
+  <!-- Breeze curves -->
+  <path d="M12 28C15 24 20 25 24 26" stroke="#10B981" stroke-width="2" stroke-linecap="round" />
+  <path d="M10 38C13 36 17 37 19 39" stroke="#10B981" stroke-width="2" stroke-linecap="round" />
+</svg>

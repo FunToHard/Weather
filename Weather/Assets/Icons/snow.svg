@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="snowCloudGrad" x1="14" y1="20" x2="50" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F1F5F9" />
+      <stop offset="100%" stop-color="#CBD5E1" />
+    </linearGradient>
+  </defs>
+  <!-- Cloud -->
+  <path d="M46 40H20C15.58 40 12 36.42 12 32C12 27.8 15.22 24.36 19.34 24.03C20.66 18.31 25.82 14 32 14C39.11 14 45.02 19.46 45.89 26.42C49.33 26.98 52 29.94 52 33.5C52 37.09 49.31 40 46 40Z" fill="url(#snowCloudGrad)" />
+  <!-- Snowflakes -->
+  <g stroke="#93C5FD" stroke-width="2" stroke-linecap="round">
+    <!-- Flake 1 -->
+    <line x1="22" y1="46" x2="22" y2="54" />
+    <line x1="18" y1="50" x2="26" y2="50" />
+    <!-- Flake 2 -->
+    <line x1="33" y1="46" x2="33" y2="54" />
+    <line x1="29" y1="50" x2="37" y2="50" />
+    <!-- Flake 3 -->
+    <line x1="44" y1="46" x2="44" y2="54" />
+    <line x1="40" y1="50" x2="48" y2="50" />
+  </g>
+</svg>

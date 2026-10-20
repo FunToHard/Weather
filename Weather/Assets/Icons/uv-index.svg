@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="uvArcGrad" x1="10" y1="36" x2="54" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="40%" stop-color="#FBBF24" />
+      <stop offset="70%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#EF4444" />
+    </linearGradient>
+  </defs>
+  <!-- Gauge Arc -->
+  <path d="M12 44C12 28.536 24.536 16 40 16" stroke="none" />
+  <path d="M14 44C14 34.05 18.02 24.52 25.17 17.51C32.32 10.5 41.85 6.55 51.8 6.55" stroke="none" />
+  <path d="M14 46A22 22 0 0 1 50 46" stroke="url(#uvArcGrad)" stroke-width="6" stroke-linecap="round" fill="none" />
+  <!-- Center Indicator Dot -->
+  <circle cx="32" cy="46" r="4" fill="#64748B" />
+  <!-- Needle -->
+  <line x1="32" y1="46" x2="38" y2="28" stroke="#1E293B" stroke-width="3" stroke-linecap="round" />
+</svg>

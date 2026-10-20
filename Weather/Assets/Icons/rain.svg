@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="rainCloudGrad" x1="14" y1="20" x2="50" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E2E8F0" />
+      <stop offset="100%" stop-color="#94A3B8" />
+    </linearGradient>
+    <linearGradient id="dropGrad" x1="0" y1="0" x2="0" y2="10" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+  </defs>
+  <!-- Cloud -->
+  <path d="M46 42H20C15.58 42 12 38.42 12 34C12 29.8 15.22 26.36 19.34 26.03C20.66 20.31 25.82 16 32 16C39.11 16 45.02 21.46 45.89 28.42C49.33 28.98 52 31.94 52 35.5C52 39.09 49.31 42 46 42Z" fill="url(#rainCloudGrad)" />
+  <!-- Raindrops -->
+  <g stroke="#3B82F6" stroke-width="3" stroke-linecap="round">
+    <line x1="22" y1="48" x2="19" y2="55" />
+    <line x1="33" y1="48" x2="30" y2="55" />
+    <line x1="44" y1="48" x2="41" y2="55" />
+  </g>
+</svg>
