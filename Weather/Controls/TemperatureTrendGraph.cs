@@ -8,6 +8,32 @@ namespace Weather.Controls;
 
 public class TemperatureTrendGraph : Control
 {
+    private static readonly IBrush LineBrush = new LinearGradientBrush
+    {
+        StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+        EndPoint = new RelativePoint(1, 0, RelativeUnit.Relative),
+        GradientStops =
+        {
+            new GradientStop(Color.Parse("#F59E0B"), 0.0),
+            new GradientStop(Color.Parse("#818CF8"), 0.5),
+            new GradientStop(Color.Parse("#3B82F6"), 1.0)
+        }
+    };
+
+    private static readonly IBrush AreaBrush = new LinearGradientBrush
+    {
+        StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
+        EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
+        GradientStops =
+        {
+            new GradientStop(Color.FromArgb(40, 245, 158, 11), 0.0),
+            new GradientStop(Color.FromArgb(0, 59, 130, 246), 1.0)
+        }
+    };
+
+    private static readonly Pen LinePen = new(LineBrush, 3.0, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+    private static readonly IBrush WhiteFill = new SolidColorBrush(Colors.White);
+
     public static readonly StyledProperty<IReadOnlyList<double>?> TemperaturesProperty =
         AvaloniaProperty.Register<TemperatureTrendGraph, IReadOnlyList<double>?>(nameof(Temperatures));
 
@@ -54,29 +80,6 @@ public class TemperatureTrendGraph : Control
             double y = topPadding + normalized * availableHeight;
             points[i] = new Point(x, y);
         }
-
-        var lineBrush = new LinearGradientBrush
-        {
-            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-            EndPoint = new RelativePoint(1, 0, RelativeUnit.Relative),
-            GradientStops =
-            {
-                new GradientStop(Color.Parse("#F59E0B"), 0.0),
-                new GradientStop(Color.Parse("#818CF8"), 0.5),
-                new GradientStop(Color.Parse("#3B82F6"), 1.0)
-            }
-        };
-
-        var areaBrush = new LinearGradientBrush
-        {
-            StartPoint = new RelativePoint(0, 0, RelativeUnit.Relative),
-            EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
-            GradientStops =
-            {
-                new GradientStop(Color.FromArgb(40, 245, 158, 11), 0.0),
-                new GradientStop(Color.FromArgb(0, 59, 130, 246), 1.0)
-            }
-        };
 
         var streamGeometry = new StreamGeometry();
         using (var ctx = streamGeometry.Open())
@@ -126,17 +129,14 @@ public class TemperatureTrendGraph : Control
             ctx.EndFigure(true);
         }
 
-        context.DrawGeometry(areaBrush, null, areaGeometry);
+        context.DrawGeometry(AreaBrush, null, areaGeometry);
+        context.DrawGeometry(null, LinePen, streamGeometry);
 
-        var pen = new Pen(lineBrush, 3.0, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
-        context.DrawGeometry(null, pen, streamGeometry);
-
-        var whiteFill = new SolidColorBrush(Colors.White);
         for (int i = 0; i < count; i++)
         {
             Color nodeColor = i == 0 ? Color.Parse("#F59E0B") : (i == count - 1 ? Color.Parse("#3B82F6") : Color.Parse("#818CF8"));
             var nodePen = new Pen(new SolidColorBrush(nodeColor), 2.5);
-            context.DrawEllipse(whiteFill, nodePen, points[i], 4.5, 4.5);
+            context.DrawEllipse(WhiteFill, nodePen, points[i], 4.5, 4.5);
         }
     }
 }

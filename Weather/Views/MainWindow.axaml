@@ -286,54 +286,53 @@
                                 <Grid Grid.Row="1">
                                     <!-- 5 Equal Width Columns (20% each) stretching with window resize -->
                                     <Grid ColumnDefinitions="*,*,*,*,*">
-                                        <!-- Hour 1: 6 PM -->
+                                        <!-- Hour 1 -->
                                         <Border Grid.Column="0" Classes="GlassPill" Margin="4,0" Padding="6,12">
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
-                                                <TextBlock Grid.Row="0" Text="6 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
-                                                <TextBlock Grid.Row="1" Text="71°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
-                                                <!-- Middle space for curve -->
+                                                <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[0].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[0].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
                                                 <Panel Grid.Row="2" Height="60" />
-                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/sunny.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                                <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[0].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
 
-                                        <!-- Hour 2: 7 PM -->
+                                        <!-- Hour 2 -->
                                         <Border Grid.Column="1" Classes="GlassPill" Margin="4,0" Padding="6,12">
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
-                                                <TextBlock Grid.Row="0" Text="7 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
-                                                <TextBlock Grid.Row="1" Text="69°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[1].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[1].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
                                                 <Panel Grid.Row="2" Height="60" />
-                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/partly-cloudy.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                                <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[1].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
 
-                                        <!-- Hour 3: 8 PM -->
+                                        <!-- Hour 3 -->
                                         <Border Grid.Column="2" Classes="GlassPill" Margin="4,0" Padding="6,12">
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
-                                                <TextBlock Grid.Row="0" Text="8 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
-                                                <TextBlock Grid.Row="1" Text="66°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[2].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[2].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
                                                 <Panel Grid.Row="2" Height="60" />
-                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/cloudy.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                                <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[2].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
 
-                                        <!-- Hour 4: 9 PM -->
+                                        <!-- Hour 4 -->
                                         <Border Grid.Column="3" Classes="GlassPill" Margin="4,0" Padding="6,12">
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
-                                                <TextBlock Grid.Row="0" Text="9 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
-                                                <TextBlock Grid.Row="1" Text="64°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[3].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[3].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
                                                 <Panel Grid.Row="2" Height="60" />
-                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/clear-night.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                                <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[3].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
 
-                                        <!-- Hour 5: 10 PM -->
+                                        <!-- Hour 5 -->
                                         <Border Grid.Column="4" Classes="GlassPill" Margin="4,0" Padding="6,12">
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
-                                                <TextBlock Grid.Row="0" Text="10 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
-                                                <TextBlock Grid.Row="1" Text="62°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[4].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[4].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
                                                 <Panel Grid.Row="2" Height="60" />
-                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/clear-night.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                                <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[4].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
                                     </Grid>
@@ -375,12 +374,12 @@
                                          VerticalAlignment="Center"
                                          Margin="0,4,0,4" />
                                 <TextBlock Grid.Row="2"
-                                           Text="12 mph"
+                                           Text="{Binding WindSpeed}"
                                            FontSize="20"
                                            FontWeight="Bold"
                                            HorizontalAlignment="Center" />
                                 <TextBlock Grid.Row="3"
-                                           Text="NW"
+                                           Text="{Binding WindDirection}"
                                            FontSize="12"
                                            Opacity="0.7"
                                            HorizontalAlignment="Center" />
