@@ -8,8 +8,6 @@
     </linearGradient>
   </defs>
   <!-- Gauge Arc -->
-  <path d="M12 44C12 28.536 24.536 16 40 16" stroke="none" />
-  <path d="M14 44C14 34.05 18.02 24.52 25.17 17.51C32.32 10.5 41.85 6.55 51.8 6.55" stroke="none" />
   <path d="M14 46A22 22 0 0 1 50 46" stroke="url(#uvArcGrad)" stroke-width="6" stroke-linecap="round" fill="none" />
   <!-- Center Indicator Dot -->
   <circle cx="32" cy="46" r="4" fill="#64748B" />
