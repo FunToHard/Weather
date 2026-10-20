@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Threading;
@@ -46,8 +47,8 @@ public partial class MainWindow : Window
         WeatherMap.Map = map;
         map.Navigator.CenterOnAndZoomTo(initialPoint, 2500);
 
-        // 5. User interaction: Click anywhere on map to drop pin & fetch live weather
-        WeatherMap.Info += (sender, args) =>
+        // 5. User interaction: Click anywhere on map to select location, then smoothly transition to Hourly Forecast
+        WeatherMap.Info += async (sender, args) =>
         {
             if (args.WorldPosition != null)
             {
@@ -61,7 +62,12 @@ public partial class MainWindow : Window
 
                 if (DataContext is MainWindowViewModel vm)
                 {
-                    _ = vm.LoadWeatherByCoordinatesAsync(lat, lon);
+                    // Fetch live weather data for chosen coordinates
+                    await vm.LoadWeatherByCoordinatesAsync(lat, lon);
+
+                    // Smooth transition back to Hourly Forecast after pin drop confirmation
+                    await Task.Delay(400);
+                    Dispatcher.UIThread.Post(() => vm.IsMapVisible = false);
                 }
             }
         };
@@ -102,6 +108,30 @@ public partial class MainWindow : Window
             WeatherMap.Map?.Navigator.CenterOnAndZoomTo(targetPoint, 2500);
             WeatherMap.RefreshGraphics();
         });
+    }
+
+    private void LocationBadge_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel vm)
+        {
+            vm.IsMapVisible = true;
+        }
+    }
+
+    private void OpenMap_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel vm)
+        {
+            vm.IsMapVisible = true;
+        }
+    }
+
+    private void CloseMap_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel vm)
+        {
+            vm.IsMapVisible = false;
+        }
     }
 
     private void TitleBar_PointerPressed(object? sender, PointerPressedEventArgs e)

@@ -32,6 +32,21 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _coordinatesDisplay = "37.77° N, 122.42° W";
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsHourlyForecastVisible))]
+    private bool _isMapVisible;
+
+    public bool IsHourlyForecastVisible => !IsMapVisible;
+
+    [RelayCommand]
+    public void ShowMap() => IsMapVisible = true;
+
+    [RelayCommand]
+    public void HideMap() => IsMapVisible = false;
+
+    [RelayCommand]
+    public void ToggleMap() => IsMapVisible = !IsMapVisible;
+
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(CurrentTempDisplay))]
     private int _currentTemp = 72;
 
