@@ -44,8 +44,15 @@ public record LiveWeatherData
 
 public class OpenMeteoWeatherService
 {
-    private static readonly HttpClient HttpClient = new() { Timeout = TimeSpan.FromSeconds(8) };
+    private static readonly HttpClient HttpClient = CreateHttpClient();
     private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+
+    private static HttpClient CreateHttpClient()
+    {
+        var client = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("WeatherApp/1.0 (Avalonia-Glass-Desktop)");
+        return client;
+    }
 
     public async Task<LiveWeatherData?> FetchWeatherAsync(string cityName, CancellationToken cancellationToken = default)
     {

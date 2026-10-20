@@ -44,6 +44,9 @@ public class VisibilityGauge : Control
     private static readonly IBrush EyeIris = new SolidColorBrush(Color.Parse("#0284C7"));
     private static readonly IBrush EyePupil = new SolidColorBrush(Color.Parse("#FFFFFF"));
 
+    private static readonly StreamGeometry Ring1Geom = CreateArc(50.0, 52.0, 24.0);
+    private static readonly StreamGeometry Ring2Geom = CreateArc(50.0, 52.0, 15.0);
+
     static VisibilityGauge()
     {
         AffectsRender<VisibilityGauge>(ValueProperty);
@@ -74,9 +77,9 @@ public class VisibilityGauge : Control
             }
             context.DrawGeometry(null, TrackPen, trackGeom);
 
-            // Inner dashed range rings (distance steps)
-            context.DrawGeometry(null, RingPen, CreateArc(cx, cy, 24.0));
-            context.DrawGeometry(null, RingPen, CreateArc(cx, cy, 15.0));
+            // Pre-cached static range rings (zero allocations during draw)
+            context.DrawGeometry(null, RingPen, Ring1Geom);
+            context.DrawGeometry(null, RingPen, Ring2Geom);
 
             // Active Arc based on Value (0 to 16+ miles)
             double clampedVal = Math.Clamp(Value, 0.0, 16.0);

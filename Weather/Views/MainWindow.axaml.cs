@@ -14,6 +14,7 @@ namespace Weather.Views;
 public partial class MainWindow : Window
 {
     private readonly MemoryLayer _pinLayer;
+    private MainWindowViewModel? _currentVm;
 
     public MainWindow()
     {
@@ -69,9 +70,20 @@ public partial class MainWindow : Window
     protected override void OnDataContextChanged(EventArgs e)
     {
         base.OnDataContextChanged(e);
+
+        if (_currentVm != null)
+        {
+            _currentVm.LocationChanged -= OnLocationChanged;
+        }
+
         if (DataContext is MainWindowViewModel vm)
         {
-            vm.LocationChanged += OnLocationChanged;
+            _currentVm = vm;
+            _currentVm.LocationChanged += OnLocationChanged;
+        }
+        else
+        {
+            _currentVm = null;
         }
     }
 
