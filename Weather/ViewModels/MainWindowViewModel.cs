@@ -1,13 +1,19 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Weather.Models;
+using Weather.Services;
 
 namespace Weather.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    private readonly OpenMeteoWeatherService _weatherService = new();
+
     [ObservableProperty]
     private string _city = "San Francisco, CA";
 
@@ -74,32 +80,99 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string _daylightStatus = "Sunset in ~35m";
 
+    [ObservableProperty]
+    private bool _isLoading;
+
+    [ObservableProperty]
+    private IReadOnlyList<double> _hourlyTemps = new double[] { 71, 69, 66, 64, 62 };
+
     public ObservableCollection<DailyForecast> DailyForecasts { get; } = new();
     public ObservableCollection<HourlyForecast> HourlyForecasts { get; } = new();
     public ObservableCollection<WeatherMetric> MetricCards { get; } = new();
-    public IReadOnlyList<double> HourlyTemps { get; } = new double[] { 71, 69, 66, 64, 62 };
 
     public MainWindowViewModel()
     {
+        // 1. Populate demo baseline immediately so the UI is never empty
         LoadDemoWeatherData();
+
+        // 2. Fetch live data asynchronously for default location
+        _ = LoadWeatherAsync("San Francisco");
     }
 
     [RelayCommand]
-    private void Search()
+    public async Task SearchAsync()
     {
         if (string.IsNullOrWhiteSpace(SearchQuery)) return;
-        City = SearchQuery.Trim();
-        // In showcase mode, keep data rich and vibrant
+        await LoadWeatherAsync(SearchQuery.Trim());
+    }
+
+    public async Task LoadWeatherAsync(string query)
+    {
+        IsLoading = true;
+        try
+        {
+            var liveData = await _weatherService.FetchWeatherAsync(query);
+            if (liveData != null)
+            {
+                City = liveData.FormattedCity;
+                SearchQuery = liveData.FormattedCity;
+                CurrentTemp = liveData.CurrentTemp;
+                Condition = liveData.Condition;
+                HeroIconPath = liveData.HeroIconPath;
+                TempRange = liveData.TempRange;
+                WindSpeed = $"{liveData.WindSpeed} mph";
+                WindAngle = liveData.WindAngle;
+                WindDirection = liveData.WindDirection;
+                Humidity = $"{liveData.Humidity}%";
+                HumidityValue = liveData.Humidity;
+                UvIndex = liveData.UvIndex.ToString("0.#", CultureInfo.InvariantCulture);
+                UvIndexValue = liveData.UvIndex;
+                UvLevel = liveData.UvLevel;
+                AirQuality = liveData.Aqi.ToString();
+                AqiValue = liveData.Aqi;
+                AirQualityStatus = liveData.AqiStatus;
+                Sunrise = liveData.Sunrise;
+                Sunset = liveData.Sunset;
+                DaylightDuration = liveData.DaylightDuration;
+                DaylightStatus = liveData.DaylightStatus;
+
+                if (liveData.DailyForecasts.Count > 0)
+                {
+                    DailyForecasts.Clear();
+                    foreach (var d in liveData.DailyForecasts)
+                        DailyForecasts.Add(d);
+                }
+
+                if (liveData.HourlyForecasts.Count > 0)
+                {
+                    HourlyForecasts.Clear();
+                    foreach (var h in liveData.HourlyForecasts)
+                        HourlyForecasts.Add(h);
+                }
+
+                if (liveData.HourlyTemps.Count > 0)
+                {
+                    HourlyTemps = liveData.HourlyTemps;
+                }
+            }
+        }
+        catch
+        {
+            // Retain existing data if request fails
+        }
+        finally
+        {
+            IsLoading = false;
+        }
     }
 
     private void LoadDemoWeatherData()
     {
-        // 7-Day Forecast Data
         DailyForecasts.Clear();
         DailyForecasts.Add(new DailyForecast
         {
-            Day = "Sat",
-            Date = "Today",
+            Day = "Today",
+            Date = DateTime.Now.ToString("MMM d"),
             IconPath = "/Assets/Icons/partly-cloudy.svg",
             Condition = "Partly Cloudy",
             MinTemp = 62,
@@ -110,7 +183,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DailyForecasts.Add(new DailyForecast
         {
             Day = "Sun",
-            Date = "Tomorrow",
+            Date = DateTime.Now.AddDays(1).ToString("MMM d"),
             IconPath = "/Assets/Icons/sunny.svg",
             Condition = "Sunny",
             MinTemp = 64,
@@ -121,7 +194,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DailyForecasts.Add(new DailyForecast
         {
             Day = "Mon",
-            Date = "Oct 22",
+            Date = DateTime.Now.AddDays(2).ToString("MMM d"),
             IconPath = "/Assets/Icons/cloudy.svg",
             Condition = "Cloudy",
             MinTemp = 60,
@@ -132,7 +205,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DailyForecasts.Add(new DailyForecast
         {
             Day = "Tue",
-            Date = "Oct 23",
+            Date = DateTime.Now.AddDays(3).ToString("MMM d"),
             IconPath = "/Assets/Icons/rain.svg",
             Condition = "Light Rain",
             MinTemp = 58,
@@ -143,7 +216,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DailyForecasts.Add(new DailyForecast
         {
             Day = "Wed",
-            Date = "Oct 24",
+            Date = DateTime.Now.AddDays(4).ToString("MMM d"),
             IconPath = "/Assets/Icons/sunny.svg",
             Condition = "Sunny",
             MinTemp = 63,
@@ -154,7 +227,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DailyForecasts.Add(new DailyForecast
         {
             Day = "Thu",
-            Date = "Oct 25",
+            Date = DateTime.Now.AddDays(5).ToString("MMM d"),
             IconPath = "/Assets/Icons/partly-cloudy.svg",
             Condition = "Mostly Sunny",
             MinTemp = 62,
@@ -165,7 +238,7 @@ public partial class MainWindowViewModel : ViewModelBase
         DailyForecasts.Add(new DailyForecast
         {
             Day = "Fri",
-            Date = "Oct 26",
+            Date = DateTime.Now.AddDays(6).ToString("MMM d"),
             IconPath = "/Assets/Icons/sunny.svg",
             Condition = "Clear",
             MinTemp = 65,
@@ -174,11 +247,10 @@ public partial class MainWindowViewModel : ViewModelBase
             BarWidthRatio = 0.58
         });
 
-        // Hourly Forecast Timeline
         HourlyForecasts.Clear();
         HourlyForecasts.Add(new HourlyForecast
         {
-            Time = "6 PM",
+            Time = "Now",
             Temperature = 71,
             IconPath = "/Assets/Icons/sunny.svg",
             Condition = "Sunny",
@@ -211,43 +283,6 @@ public partial class MainWindowViewModel : ViewModelBase
             Temperature = 62,
             IconPath = "/Assets/Icons/clear-night.svg",
             Condition = "Clear"
-        });
-
-        // Atmospheric Metric Cards
-        MetricCards.Clear();
-        MetricCards.Add(new WeatherMetric
-        {
-            Title = "Wind speed",
-            Value = "12 mph",
-            SubValue = "NW • Gusts to 18 mph",
-            IconPath = "/Assets/Icons/wind.svg",
-            BadgeText = "NW"
-        });
-        MetricCards.Add(new WeatherMetric
-        {
-            Title = "Humidity",
-            Value = "58%",
-            SubValue = "The dew point is 56° right now",
-            IconPath = "/Assets/Icons/humidity.svg",
-            BadgeText = "Normal"
-        });
-        MetricCards.Add(new WeatherMetric
-        {
-            Title = "UV Index",
-            Value = "3",
-            SubValue = "Moderate risk of harm from UV",
-            IconPath = "/Assets/Icons/uv-index.svg",
-            BadgeText = "Moderate",
-            BadgeColor = "#F59E0B"
-        });
-        MetricCards.Add(new WeatherMetric
-        {
-            Title = "Air Quality",
-            Value = "32",
-            SubValue = "Air quality is satisfactory (AQI)",
-            IconPath = "/Assets/Icons/air-quality.svg",
-            BadgeText = "Good",
-            BadgeColor = "#10B981"
         });
     }
 }

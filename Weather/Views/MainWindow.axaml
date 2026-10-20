@@ -10,7 +10,7 @@
         x:Class="Weather.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="Weather"
+        Title=""
         Width="1140" Height="720"
         MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
@@ -47,24 +47,17 @@
                     Height="44"
                     Background="Transparent">
                 <Grid ColumnDefinitions="Auto,*,Auto">
-                    <!-- Column 0: App Branding (Draggable) -->
-                    <StackPanel Grid.Column="0"
-                                Orientation="Horizontal"
-                                VerticalAlignment="Center"
-                                Margin="16,0,16,0"
-                                Spacing="10"
-                                Background="Transparent"
-                                PointerPressed="TitleBar_PointerPressed">
-                        <Image Source="/Assets/avalonia-logo.ico"
-                               Width="18"
-                               Height="18"
-                               VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding $parent[Window].Title}"
-                                   FontSize="12"
-                                   FontWeight="SemiBold"
-                                   VerticalAlignment="Center"
-                                   Opacity="0.85" />
-                    </StackPanel>
+                    <!-- Column 0: Weather Icon Branding (Draggable) -->
+                    <Border Grid.Column="0"
+                            VerticalAlignment="Center"
+                            Margin="16,0,16,0"
+                            Background="Transparent"
+                            PointerPressed="TitleBar_PointerPressed">
+                        <svg:Svg Path="/Assets/Icons/partly-cloudy.svg"
+                                 Width="24"
+                                 Height="24"
+                                 VerticalAlignment="Center" />
+                    </Border>
 
                     <!-- Column 1: Center Draggable Space with Search & Location -->
                     <Grid Grid.Column="1"
