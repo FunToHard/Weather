@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 70" fill="none">
+  <defs>
+    <linearGradient id="uvRainbowGrad" x1="14" y1="56" x2="86" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="35%" stop-color="#FBBF24" />
+      <stop offset="65%" stop-color="#F97316" />
+      <stop offset="100%" stop-color="#EF4444" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rainbow Arc Track (180 deg semicircle, radius 36) -->
+  <path d="M 14 56 A 36 36 0 0 1 86 56" stroke="url(#uvRainbowGrad)" stroke-width="8" stroke-linecap="round" />
+
+  <!-- Needle pointing to Moderate (Level 3 / ~30% along arc, which is -36 deg from vertical) -->
+  <g transform="rotate(-36 50 56)">
+    <line x1="50" y1="56" x2="50" y2="26" stroke="#1E293B" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- Center Pivot Base -->
+  <circle cx="50" cy="56" r="6" fill="#FFFFFF" stroke="#F59E0B" stroke-width="2.5" />
+  <circle cx="50" cy="56" r="2.5" fill="#1E293B" />
+</svg>

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -49,9 +50,22 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private string _airQualityStatus = "Good";
 
+    [ObservableProperty]
+    private string _sunrise = "6:42 AM";
+
+    [ObservableProperty]
+    private string _sunset = "6:18 PM";
+
+    [ObservableProperty]
+    private string _daylightDuration = "11h 36m of daylight";
+
+    [ObservableProperty]
+    private string _daylightStatus = "Sunset in ~35m";
+
     public ObservableCollection<DailyForecast> DailyForecasts { get; } = new();
     public ObservableCollection<HourlyForecast> HourlyForecasts { get; } = new();
     public ObservableCollection<WeatherMetric> MetricCards { get; } = new();
+    public IReadOnlyList<double> HourlyTemps { get; } = new double[] { 71, 69, 66, 64, 62 };
 
     public MainWindowViewModel()
     {

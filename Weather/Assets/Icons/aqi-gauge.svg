@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="aqiGrad" x1="20" y1="80" x2="80" y2="20" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34D399" />
+      <stop offset="100%" stop-color="#059669" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Track Circle -->
+  <circle cx="50" cy="50" r="36" stroke="#E2E8F0" stroke-width="7" opacity="0.35" />
+
+  <!-- Progress Arc for AQI 32 (Good, ~65% of circle) -->
+  <circle cx="50" cy="50" r="36" stroke="url(#aqiGrad)" stroke-width="7" stroke-linecap="round" stroke-dasharray="160 226" transform="rotate(-90 50 50)" />
+
+  <!-- Center Stylized Eco Leaf -->
+  <path d="M57 37C45 37 36 46 36 58C48 58 57 49 57 37Z" fill="url(#aqiGrad)" />
+  <path d="M36 58C40 53 46 47 57 37" stroke="#A7F3D0" stroke-width="2" stroke-linecap="round" />
+</svg>

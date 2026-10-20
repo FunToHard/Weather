@@ -2,16 +2,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:Weather.ViewModels"
         xmlns:models="using:Weather.Models"
+        xmlns:controls="using:Weather.Controls"
         xmlns:svg="clr-namespace:Avalonia.Svg.Skia;assembly=Avalonia.Svg.Skia"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1100" d:DesignHeight="700"
+        mc:Ignorable="d" d:DesignWidth="1140" d:DesignHeight="720"
         x:Class="Weather.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="Weather"
-        Width="1100" Height="700"
-        MinWidth="850" MinHeight="550"
+        Width="1140" Height="720"
+        MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
         ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="PreferSystemChrome"
@@ -118,75 +119,122 @@
 
             <!-- Main Weather Dashboard Layout -->
             <Border Grid.Row="1"
-                    Margin="20,8,20,20"
+                    Margin="20,6,20,20"
                     Padding="{Binding $parent[Window].OffScreenMargin}">
-                <Grid ColumnDefinitions="290,*,290">
-                    <!-- LEFT COLUMN: 7-Day Forecast -->
-                    <Border Grid.Column="0"
-                            Classes="GlassCard"
-                            Padding="16"
-                            Margin="0,0,12,0">
-                        <Grid RowDefinitions="Auto,*">
-                            <TextBlock Grid.Row="0"
-                                       Text="7-Day Forecast"
-                                       FontSize="15"
-                                       FontWeight="SemiBold"
-                                       Margin="4,0,0,12"
-                                       Opacity="0.85" />
-                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                                <ItemsControl ItemsSource="{Binding DailyForecasts}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="models:DailyForecast">
-                                            <Border Classes="GlassPill"
-                                                    Margin="0,0,0,8"
-                                                    Padding="12,10">
-                                                <Grid ColumnDefinitions="36,30,*,60">
-                                                    <TextBlock Grid.Column="0"
-                                                               Text="{Binding Day}"
-                                                               FontWeight="SemiBold"
-                                                               FontSize="13"
-                                                               VerticalAlignment="Center" />
-                                                    <svg:Svg Grid.Column="1"
-                                                             Path="{Binding IconPath}"
-                                                             Width="22"
-                                                             Height="22"
-                                                             VerticalAlignment="Center"
-                                                             HorizontalAlignment="Center" />
-                                                    <!-- Temperature Range Gradient Bar -->
-                                                    <Grid Grid.Column="2"
-                                                          Margin="8,0"
-                                                          VerticalAlignment="Center"
-                                                          Height="5">
-                                                        <Border CornerRadius="2.5"
-                                                                Background="#15000000" />
-                                                        <Border CornerRadius="2.5"
-                                                                Height="5"
-                                                                HorizontalAlignment="Stretch">
-                                                            <Border.Background>
-                                                                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
-                                                                    <GradientStop Color="#60A5FA" Offset="0" />
-                                                                    <GradientStop Color="#FBBF24" Offset="0.5" />
-                                                                    <GradientStop Color="#F87171" Offset="1" />
-                                                                </LinearGradientBrush>
-                                                            </Border.Background>
-                                                        </Border>
+                <Grid ColumnDefinitions="300,*,320">
+                    <!-- LEFT COLUMN: 7-Day Forecast & Sunrise/Sunset Tracker -->
+                    <Grid Grid.Column="0" RowDefinitions="*,Auto" Margin="0,0,12,0">
+                        <!-- 7-Day Forecast Card -->
+                        <Border Grid.Row="0"
+                                Classes="GlassCard"
+                                Padding="16"
+                                Margin="0,0,0,12">
+                            <Grid RowDefinitions="Auto,*">
+                                <TextBlock Grid.Row="0"
+                                           Text="7-Day Forecast"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Margin="4,0,0,12"
+                                           Opacity="0.85" />
+                                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                    <ItemsControl ItemsSource="{Binding DailyForecasts}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:DailyForecast">
+                                                <Border Classes="GlassPill"
+                                                        Margin="0,0,0,8"
+                                                        Padding="12,9">
+                                                    <Grid ColumnDefinitions="36,28,*,60">
+                                                        <TextBlock Grid.Column="0"
+                                                                   Text="{Binding Day}"
+                                                                   FontWeight="SemiBold"
+                                                                   FontSize="13"
+                                                                   VerticalAlignment="Center" />
+                                                        <svg:Svg Grid.Column="1"
+                                                                 Path="{Binding IconPath}"
+                                                                 Width="22"
+                                                                 Height="22"
+                                                                 VerticalAlignment="Center"
+                                                                 HorizontalAlignment="Center" />
+                                                        <!-- Temperature Range Gradient Bar -->
+                                                        <Grid Grid.Column="2"
+                                                              Margin="8,0"
+                                                              VerticalAlignment="Center"
+                                                              Height="5">
+                                                            <Border CornerRadius="2.5"
+                                                                    Background="#15000000" />
+                                                            <Border CornerRadius="2.5"
+                                                                    Height="5"
+                                                                    HorizontalAlignment="Stretch">
+                                                                <Border.Background>
+                                                                    <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                                                        <GradientStop Color="#60A5FA" Offset="0" />
+                                                                        <GradientStop Color="#FBBF24" Offset="0.5" />
+                                                                        <GradientStop Color="#F87171" Offset="1" />
+                                                                    </LinearGradientBrush>
+                                                                </Border.Background>
+                                                            </Border>
+                                                        </Grid>
+                                                        <TextBlock Grid.Column="3"
+                                                                   Text="{Binding TempRangeDisplay}"
+                                                                   FontSize="12"
+                                                                   Opacity="0.85"
+                                                                   VerticalAlignment="Center"
+                                                                   TextAlignment="Right" />
                                                     </Grid>
-                                                    <TextBlock Grid.Column="3"
-                                                               Text="{Binding TempRangeDisplay}"
-                                                               FontSize="12"
-                                                               Opacity="0.85"
-                                                               VerticalAlignment="Center"
-                                                               TextAlignment="Right" />
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </Grid>
-                    </Border>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
 
-                    <!-- CENTER COLUMN: Current Conditions Hero & Hourly Timeline -->
+                        <!-- Sunrise & Sunset Solar Tracker Card -->
+                        <Border Grid.Row="1"
+                                Classes="GlassCard"
+                                Padding="16">
+                            <StackPanel Spacing="6">
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <TextBlock Grid.Column="0"
+                                               Text="Sun &amp; Daylight"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Opacity="0.85" />
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding DaylightStatus}"
+                                               FontSize="11"
+                                               Opacity="0.75" />
+                                </Grid>
+
+                                <!-- Visual Solar Arc -->
+                                <svg:Svg Path="/Assets/Icons/solar-tracker.svg"
+                                         Height="72"
+                                         Margin="0,4,0,4"
+                                         HorizontalAlignment="Center" />
+
+                                <!-- Sunrise and Sunset Times -->
+                                <Grid ColumnDefinitions="*,Auto,*">
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Sunrise" FontSize="11" Opacity="0.65" />
+                                        <TextBlock Text="{Binding Sunrise}" FontSize="13" FontWeight="SemiBold" />
+                                    </StackPanel>
+
+                                    <TextBlock Grid.Column="1"
+                                               Text="{Binding DaylightDuration}"
+                                               FontSize="11"
+                                               Opacity="0.7"
+                                               VerticalAlignment="Bottom" />
+
+                                    <StackPanel Grid.Column="2" HorizontalAlignment="Right">
+                                        <TextBlock Text="Sunset" FontSize="11" Opacity="0.65" HorizontalAlignment="Right" />
+                                        <TextBlock Text="{Binding Sunset}" FontSize="13" FontWeight="SemiBold" HorizontalAlignment="Right" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- CENTER COLUMN: Current Conditions Hero & Responsive Hourly Graph -->
                     <Grid Grid.Column="1"
                           RowDefinitions="Auto,*"
                           Margin="4,0,4,0">
@@ -222,183 +270,221 @@
                             </Grid>
                         </Border>
 
-                        <!-- Hourly Forecast Section -->
+                        <!-- Responsive Hourly Forecast Card with Continuous Temperature Spline Graph -->
                         <Border Grid.Row="1"
                                 Classes="GlassCard"
-                                Padding="20">
+                                Padding="18">
                             <Grid RowDefinitions="Auto,*">
                                 <TextBlock Grid.Row="0"
                                            Text="Hourly Forecast"
                                            FontSize="15"
                                            FontWeight="SemiBold"
-                                           Margin="4,0,0,14"
+                                           Margin="4,0,0,12"
                                            Opacity="0.85" />
-                                <ScrollViewer Grid.Row="1"
-                                              HorizontalScrollBarVisibility="Auto"
-                                              VerticalScrollBarVisibility="Disabled">
-                                    <ItemsControl ItemsSource="{Binding HourlyForecasts}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Horizontal" Spacing="10" />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="models:HourlyForecast">
-                                                <Border Classes="GlassPill"
-                                                        Width="80"
-                                                        Padding="8,14">
-                                                    <StackPanel Spacing="10"
-                                                                HorizontalAlignment="Center">
-                                                        <TextBlock Text="{Binding Time}"
-                                                                   FontSize="12"
-                                                                   Opacity="0.75"
-                                                                   HorizontalAlignment="Center" />
-                                                        <TextBlock Text="{Binding TempDisplay}"
-                                                                   FontSize="16"
-                                                                   FontWeight="Bold"
-                                                                   HorizontalAlignment="Center" />
-                                                        <svg:Svg Path="{Binding IconPath}"
-                                                                 Width="30"
-                                                                 Height="30"
-                                                                 HorizontalAlignment="Center" />
-                                                    </StackPanel>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </ScrollViewer>
+
+                                <!-- Container for Responsive Columns and Spline Graph Overlay -->
+                                <Grid Grid.Row="1">
+                                    <!-- 5 Equal Width Columns (20% each) stretching with window resize -->
+                                    <Grid ColumnDefinitions="*,*,*,*,*">
+                                        <!-- Hour 1: 6 PM -->
+                                        <Border Grid.Column="0" Classes="GlassPill" Margin="4,0" Padding="6,12">
+                                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                                <TextBlock Grid.Row="0" Text="6 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="71°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <!-- Middle space for curve -->
+                                                <Panel Grid.Row="2" Height="60" />
+                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/sunny.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Hour 2: 7 PM -->
+                                        <Border Grid.Column="1" Classes="GlassPill" Margin="4,0" Padding="6,12">
+                                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                                <TextBlock Grid.Row="0" Text="7 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="69°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <Panel Grid.Row="2" Height="60" />
+                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/partly-cloudy.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Hour 3: 8 PM -->
+                                        <Border Grid.Column="2" Classes="GlassPill" Margin="4,0" Padding="6,12">
+                                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                                <TextBlock Grid.Row="0" Text="8 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="66°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <Panel Grid.Row="2" Height="60" />
+                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/cloudy.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Hour 4: 9 PM -->
+                                        <Border Grid.Column="3" Classes="GlassPill" Margin="4,0" Padding="6,12">
+                                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                                <TextBlock Grid.Row="0" Text="9 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="64°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <Panel Grid.Row="2" Height="60" />
+                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/clear-night.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+
+                                        <!-- Hour 5: 10 PM -->
+                                        <Border Grid.Column="4" Classes="GlassPill" Margin="4,0" Padding="6,12">
+                                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                                <TextBlock Grid.Row="0" Text="10 PM" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
+                                                <TextBlock Grid.Row="1" Text="62°" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                                                <Panel Grid.Row="2" Height="60" />
+                                                <svg:Svg Grid.Row="3" Path="/Assets/Icons/clear-night.svg" Width="28" Height="28" HorizontalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+
+                                    <!-- Continuous Temperature Spline Graph Overlay -->
+                                    <controls:TemperatureTrendGraph Margin="4,48,4,48"
+                                                                    Temperatures="{Binding HourlyTemps}"
+                                                                    IsHitTestVisible="False"
+                                                                    VerticalAlignment="Stretch"
+                                                                    HorizontalAlignment="Stretch" />
+                                </Grid>
                             </Grid>
                         </Border>
                     </Grid>
 
-                    <!-- RIGHT COLUMN: Atmospheric Metrics (2x2 Grid) -->
+                    <!-- RIGHT COLUMN: Atmospheric Metrics with Large Visual Graphic Gauges (2x2 Grid) -->
                     <Grid Grid.Column="2"
                           RowDefinitions="*,*"
                           ColumnDefinitions="*,*"
                           Margin="12,0,0,0">
-                        <!-- Card 1: Wind Speed -->
+                        <!-- Card 1: Wind Speed (Compass Gauge) -->
                         <Border Grid.Row="0"
                                 Grid.Column="0"
                                 Classes="GlassCard"
-                                Padding="16"
+                                Padding="14"
                                 Margin="0,0,6,6">
-                            <Grid RowDefinitions="Auto,*,Auto">
-                                <StackPanel Grid.Row="0"
-                                            Orientation="Horizontal"
-                                            Spacing="6">
-                                    <svg:Svg Path="/Assets/Icons/wind.svg"
-                                             Width="16"
-                                             Height="16" />
-                                    <TextBlock Text="Wind speed"
-                                               FontSize="12"
-                                               FontWeight="Medium"
-                                               Opacity="0.75" />
-                                </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Text="{Binding WindSpeed}"
-                                           FontSize="22"
-                                           FontWeight="Bold"
-                                           VerticalAlignment="Center"
-                                           Margin="0,8,0,0" />
+                            <Grid RowDefinitions="Auto,*,Auto,Auto">
+                                <TextBlock Grid.Row="0"
+                                           Text="Wind speed"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Opacity="0.8" />
+                                <!-- Large Compass Gauge -->
+                                <svg:Svg Grid.Row="1"
+                                         Path="/Assets/Icons/compass-gauge.svg"
+                                         Width="74"
+                                         Height="74"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         Margin="0,4,0,4" />
                                 <TextBlock Grid.Row="2"
-                                           Text="{Binding WindDirection}"
+                                           Text="12 mph"
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Grid.Row="3"
+                                           Text="NW"
                                            FontSize="12"
-                                           Opacity="0.7" />
+                                           Opacity="0.7"
+                                           HorizontalAlignment="Center" />
                             </Grid>
                         </Border>
 
-                        <!-- Card 2: Humidity -->
+                        <!-- Card 2: Humidity (Circular Dial Gauge) -->
                         <Border Grid.Row="0"
                                 Grid.Column="1"
                                 Classes="GlassCard"
-                                Padding="16"
+                                Padding="14"
                                 Margin="6,0,0,6">
-                            <Grid RowDefinitions="Auto,*,Auto">
-                                <StackPanel Grid.Row="0"
-                                            Orientation="Horizontal"
-                                            Spacing="6">
-                                    <svg:Svg Path="/Assets/Icons/humidity.svg"
-                                             Width="16"
-                                             Height="16" />
-                                    <TextBlock Text="Humidity"
-                                               FontSize="12"
-                                               FontWeight="Medium"
-                                               Opacity="0.75" />
-                                </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Text="{Binding Humidity}"
-                                           FontSize="22"
-                                           FontWeight="Bold"
-                                           VerticalAlignment="Center"
-                                           Margin="0,8,0,0" />
+                            <Grid RowDefinitions="Auto,*,Auto,Auto">
+                                <TextBlock Grid.Row="0"
+                                           Text="Humidity"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Opacity="0.8" />
+                                <!-- Large Circular Dial Gauge -->
+                                <svg:Svg Grid.Row="1"
+                                         Path="/Assets/Icons/humidity-gauge.svg"
+                                         Width="74"
+                                         Height="74"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         Margin="0,4,0,4" />
                                 <TextBlock Grid.Row="2"
+                                           Text="{Binding Humidity}"
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Grid.Row="3"
                                            Text="Normal"
                                            FontSize="12"
-                                           Opacity="0.7" />
+                                           Opacity="0.7"
+                                           HorizontalAlignment="Center" />
                             </Grid>
                         </Border>
 
-                        <!-- Card 3: UV Index -->
+                        <!-- Card 3: UV Index (Rainbow Arc Gauge) -->
                         <Border Grid.Row="1"
                                 Grid.Column="0"
                                 Classes="GlassCard"
-                                Padding="16"
+                                Padding="14"
                                 Margin="0,6,6,0">
-                            <Grid RowDefinitions="Auto,*,Auto">
-                                <StackPanel Grid.Row="0"
-                                            Orientation="Horizontal"
-                                            Spacing="6">
-                                    <svg:Svg Path="/Assets/Icons/uv-index.svg"
-                                             Width="16"
-                                             Height="16" />
-                                    <TextBlock Text="UV Index"
-                                               FontSize="12"
-                                               FontWeight="Medium"
-                                               Opacity="0.75" />
-                                </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Text="{Binding UvIndex}"
-                                           FontSize="22"
-                                           FontWeight="Bold"
-                                           VerticalAlignment="Center"
-                                           Margin="0,8,0,0" />
+                            <Grid RowDefinitions="Auto,*,Auto,Auto">
+                                <TextBlock Grid.Row="0"
+                                           Text="UV Index"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Opacity="0.8" />
+                                <!-- Large Rainbow Arc Gauge -->
+                                <svg:Svg Grid.Row="1"
+                                         Path="/Assets/Icons/uv-gauge.svg"
+                                         Width="80"
+                                         Height="62"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         Margin="0,8,0,2" />
                                 <TextBlock Grid.Row="2"
+                                           Text="{Binding UvIndex}"
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Grid.Row="3"
                                            Text="{Binding UvLevel}"
                                            FontSize="12"
                                            FontWeight="SemiBold"
-                                           Foreground="#F59E0B" />
+                                           Foreground="#F59E0B"
+                                           HorizontalAlignment="Center" />
                             </Grid>
                         </Border>
 
-                        <!-- Card 4: Air Quality -->
+                        <!-- Card 4: Air Quality (Circular Index Gauge) -->
                         <Border Grid.Row="1"
                                 Grid.Column="1"
                                 Classes="GlassCard"
-                                Padding="16"
+                                Padding="14"
                                 Margin="6,6,0,0">
-                            <Grid RowDefinitions="Auto,*,Auto">
-                                <StackPanel Grid.Row="0"
-                                            Orientation="Horizontal"
-                                            Spacing="6">
-                                    <svg:Svg Path="/Assets/Icons/air-quality.svg"
-                                             Width="16"
-                                             Height="16" />
-                                    <TextBlock Text="Air Quality"
-                                               FontSize="12"
-                                               FontWeight="Medium"
-                                               Opacity="0.75" />
-                                </StackPanel>
-                                <TextBlock Grid.Row="1"
-                                           Text="{Binding AirQuality}"
-                                           FontSize="22"
-                                           FontWeight="Bold"
-                                           VerticalAlignment="Center"
-                                           Margin="0,8,0,0" />
+                            <Grid RowDefinitions="Auto,*,Auto,Auto">
+                                <TextBlock Grid.Row="0"
+                                           Text="Air Quality"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Opacity="0.8" />
+                                <!-- Large Circular Progress Leaf Gauge -->
+                                <svg:Svg Grid.Row="1"
+                                         Path="/Assets/Icons/aqi-gauge.svg"
+                                         Width="72"
+                                         Height="72"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"
+                                         Margin="0,4,0,4" />
                                 <TextBlock Grid.Row="2"
+                                           Text="{Binding AirQuality}"
+                                           FontSize="20"
+                                           FontWeight="Bold"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Grid.Row="3"
                                            Text="{Binding AirQualityStatus}"
                                            FontSize="12"
                                            FontWeight="SemiBold"
-                                           Foreground="#10B981" />
+                                           Foreground="#10B981"
+                                           HorizontalAlignment="Center" />
                             </Grid>
                         </Border>
                     </Grid>
