@@ -36,16 +36,28 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _windDirection = "NW";
 
     [ObservableProperty]
+    private double _windAngle = 315.0;
+
+    [ObservableProperty]
     private string _humidity = "58%";
 
     [ObservableProperty]
+    private double _humidityValue = 58.0;
+
+    [ObservableProperty]
     private string _uvIndex = "3";
+
+    [ObservableProperty]
+    private double _uvIndexValue = 3.0;
 
     [ObservableProperty]
     private string _uvLevel = "Moderate";
 
     [ObservableProperty]
     private string _airQuality = "32";
+
+    [ObservableProperty]
+    private double _aqiValue = 32.0;
 
     [ObservableProperty]
     private string _airQualityStatus = "Good";

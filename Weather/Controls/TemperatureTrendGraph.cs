@@ -26,12 +26,13 @@ public class TemperatureTrendGraph : Control
         EndPoint = new RelativePoint(0, 1, RelativeUnit.Relative),
         GradientStops =
         {
-            new GradientStop(Color.FromArgb(40, 245, 158, 11), 0.0),
-            new GradientStop(Color.FromArgb(0, 59, 130, 246), 1.0)
+            new GradientStop(Color.FromArgb(130, 245, 158, 11), 0.0),
+            new GradientStop(Color.FromArgb(70, 129, 140, 248), 0.5),
+            new GradientStop(Color.FromArgb(10, 59, 130, 246), 1.0)
         }
     };
 
-    private static readonly Pen LinePen = new(LineBrush, 3.0, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
+    private static readonly Pen LinePen = new(LineBrush, 3.5, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
     private static readonly IBrush WhiteFill = new SolidColorBrush(Colors.White);
 
     public static readonly StyledProperty<IReadOnlyList<double>?> TemperaturesProperty =

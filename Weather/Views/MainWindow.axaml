@@ -291,7 +291,7 @@
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
                                                 <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[0].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
                                                 <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[0].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
-                                                <Panel Grid.Row="2" Height="60" />
+                                                <Panel Grid.Row="2" Height="36" />
                                                 <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[0].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
@@ -301,7 +301,7 @@
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
                                                 <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[1].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
                                                 <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[1].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
-                                                <Panel Grid.Row="2" Height="60" />
+                                                <Panel Grid.Row="2" Height="36" />
                                                 <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[1].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
@@ -311,7 +311,7 @@
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
                                                 <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[2].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
                                                 <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[2].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
-                                                <Panel Grid.Row="2" Height="60" />
+                                                <Panel Grid.Row="2" Height="36" />
                                                 <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[2].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
@@ -321,7 +321,7 @@
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
                                                 <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[3].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
                                                 <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[3].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
-                                                <Panel Grid.Row="2" Height="60" />
+                                                <Panel Grid.Row="2" Height="36" />
                                                 <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[3].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
@@ -331,17 +331,18 @@
                                             <Grid RowDefinitions="Auto,Auto,*,Auto">
                                                 <TextBlock Grid.Row="0" Text="{Binding HourlyForecasts[4].Time}" FontSize="12" Opacity="0.75" HorizontalAlignment="Center" />
                                                 <TextBlock Grid.Row="1" Text="{Binding HourlyForecasts[4].TempDisplay}" FontSize="16" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,4,0,0" />
-                                                <Panel Grid.Row="2" Height="60" />
+                                                <Panel Grid.Row="2" Height="36" />
                                                 <svg:Svg Grid.Row="3" Path="{Binding HourlyForecasts[4].IconPath}" Width="28" Height="28" HorizontalAlignment="Center" />
                                             </Grid>
                                         </Border>
                                     </Grid>
 
-                                    <!-- Continuous Temperature Spline Graph Overlay -->
-                                    <controls:TemperatureTrendGraph Margin="4,48,4,48"
+                                    <!-- Continuous Temperature Spline Graph Overlay (60% height, vivid orange/blue drop) -->
+                                    <controls:TemperatureTrendGraph Height="36"
+                                                                    Margin="4,46,4,38"
                                                                     Temperatures="{Binding HourlyTemps}"
                                                                     IsHitTestVisible="False"
-                                                                    VerticalAlignment="Stretch"
+                                                                    VerticalAlignment="Center"
                                                                     HorizontalAlignment="Stretch" />
                                 </Grid>
                             </Grid>
@@ -353,137 +354,153 @@
                           RowDefinitions="*,*"
                           ColumnDefinitions="*,*"
                           Margin="12,0,0,0">
-                        <!-- Card 1: Wind Speed (Compass Gauge) -->
+                        <!-- Card 1: Wind Speed (Dynamic Compass Gauge) -->
                         <Border Grid.Row="0"
                                 Grid.Column="0"
                                 Classes="GlassCard"
-                                Padding="14"
+                                Padding="12"
                                 Margin="0,0,6,6">
                             <Grid RowDefinitions="Auto,*,Auto,Auto">
                                 <TextBlock Grid.Row="0"
                                            Text="Wind speed"
                                            FontSize="13"
                                            FontWeight="SemiBold"
-                                           Opacity="0.8" />
-                                <!-- Large Compass Gauge -->
-                                <svg:Svg Grid.Row="1"
-                                         Path="/Assets/Icons/compass-gauge.svg"
-                                         Width="74"
-                                         Height="74"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"
-                                         Margin="0,4,0,4" />
+                                           Opacity="0.8"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
+                                <!-- Dynamic Compass Gauge (+25% size, reactive to WindAngle) -->
+                                <controls:CompassGauge Grid.Row="1"
+                                                       Angle="{Binding WindAngle}"
+                                                       Width="92"
+                                                       Height="92"
+                                                       HorizontalAlignment="Center"
+                                                       VerticalAlignment="Center"
+                                                       Margin="0,2,0,2" />
                                 <TextBlock Grid.Row="2"
                                            Text="{Binding WindSpeed}"
                                            FontSize="20"
                                            FontWeight="Bold"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
                                 <TextBlock Grid.Row="3"
                                            Text="{Binding WindDirection}"
                                            FontSize="12"
                                            Opacity="0.7"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
                             </Grid>
                         </Border>
 
-                        <!-- Card 2: Humidity (Circular Dial Gauge) -->
+                        <!-- Card 2: Humidity (Dynamic Dial Gauge) -->
                         <Border Grid.Row="0"
                                 Grid.Column="1"
                                 Classes="GlassCard"
-                                Padding="14"
+                                Padding="12"
                                 Margin="6,0,0,6">
                             <Grid RowDefinitions="Auto,*,Auto,Auto">
                                 <TextBlock Grid.Row="0"
                                            Text="Humidity"
                                            FontSize="13"
                                            FontWeight="SemiBold"
-                                           Opacity="0.8" />
-                                <!-- Large Circular Dial Gauge -->
-                                <svg:Svg Grid.Row="1"
-                                         Path="/Assets/Icons/humidity-gauge.svg"
-                                         Width="74"
-                                         Height="74"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"
-                                         Margin="0,4,0,4" />
+                                           Opacity="0.8"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
+                                <!-- Dynamic Circular Dial Gauge (+25% size, reactive to HumidityValue) -->
+                                <controls:HumidityGauge Grid.Row="1"
+                                                        Value="{Binding HumidityValue}"
+                                                        Width="92"
+                                                        Height="92"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Margin="0,2,0,2" />
                                 <TextBlock Grid.Row="2"
                                            Text="{Binding Humidity}"
                                            FontSize="20"
                                            FontWeight="Bold"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
                                 <TextBlock Grid.Row="3"
                                            Text="Normal"
                                            FontSize="12"
                                            Opacity="0.7"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
                             </Grid>
                         </Border>
 
-                        <!-- Card 3: UV Index (Rainbow Arc Gauge) -->
+                        <!-- Card 3: UV Index (Dynamic Rainbow Arc Gauge) -->
                         <Border Grid.Row="1"
                                 Grid.Column="0"
                                 Classes="GlassCard"
-                                Padding="14"
+                                Padding="12"
                                 Margin="0,6,6,0">
                             <Grid RowDefinitions="Auto,*,Auto,Auto">
                                 <TextBlock Grid.Row="0"
                                            Text="UV Index"
                                            FontSize="13"
                                            FontWeight="SemiBold"
-                                           Opacity="0.8" />
-                                <!-- Large Rainbow Arc Gauge -->
-                                <svg:Svg Grid.Row="1"
-                                         Path="/Assets/Icons/uv-gauge.svg"
-                                         Width="80"
-                                         Height="62"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"
-                                         Margin="0,8,0,2" />
+                                           Opacity="0.8"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
+                                <!-- Dynamic Rainbow Arc Gauge (+25% size, reactive to UvIndexValue) -->
+                                <controls:UvGauge Grid.Row="1"
+                                                  Value="{Binding UvIndexValue}"
+                                                  Width="100"
+                                                  Height="78"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Margin="0,4,0,0" />
                                 <TextBlock Grid.Row="2"
                                            Text="{Binding UvIndex}"
                                            FontSize="20"
                                            FontWeight="Bold"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
                                 <TextBlock Grid.Row="3"
                                            Text="{Binding UvLevel}"
                                            FontSize="12"
                                            FontWeight="SemiBold"
                                            Foreground="#F59E0B"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
                             </Grid>
                         </Border>
 
-                        <!-- Card 4: Air Quality (Circular Index Gauge) -->
+                        <!-- Card 4: Air Quality (Dynamic Circular Progress Meter) -->
                         <Border Grid.Row="1"
                                 Grid.Column="1"
                                 Classes="GlassCard"
-                                Padding="14"
+                                Padding="12"
                                 Margin="6,6,0,0">
                             <Grid RowDefinitions="Auto,*,Auto,Auto">
                                 <TextBlock Grid.Row="0"
                                            Text="Air Quality"
                                            FontSize="13"
                                            FontWeight="SemiBold"
-                                           Opacity="0.8" />
-                                <!-- Large Circular Progress Leaf Gauge -->
-                                <svg:Svg Grid.Row="1"
-                                         Path="/Assets/Icons/aqi-gauge.svg"
-                                         Width="72"
-                                         Height="72"
-                                         HorizontalAlignment="Center"
-                                         VerticalAlignment="Center"
-                                         Margin="0,4,0,4" />
+                                           Opacity="0.8"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
+                                <!-- Dynamic AQI Gauge (+25% size, reactive to AqiValue) -->
+                                <controls:AqiGauge Grid.Row="1"
+                                                   Value="{Binding AqiValue}"
+                                                   Width="90"
+                                                   Height="90"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Margin="0,2,0,2" />
                                 <TextBlock Grid.Row="2"
                                            Text="{Binding AirQuality}"
                                            FontSize="20"
                                            FontWeight="Bold"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
                                 <TextBlock Grid.Row="3"
                                            Text="{Binding AirQualityStatus}"
                                            FontSize="12"
                                            FontWeight="SemiBold"
                                            Foreground="#10B981"
-                                           HorizontalAlignment="Center" />
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center" />
                             </Grid>
                         </Border>
                     </Grid>
