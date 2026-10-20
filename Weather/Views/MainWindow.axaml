@@ -10,7 +10,7 @@
         x:Class="Weather.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title=""
+        Title="Weather"
         Width="1140" Height="720"
         MinWidth="900" MinHeight="600"
         WindowStartupLocation="CenterScreen"
