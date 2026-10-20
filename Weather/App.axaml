@@ -17,7 +17,7 @@
             <Setter Property="Background" Value="#38FFFFFF" />
             <Setter Property="BorderBrush" Value="#70FFFFFF" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="CornerRadius" Value="8" />
             <Setter Property="BoxShadow" Value="0 8 32 0 #18000000" />
         </Style>
 
@@ -25,7 +25,7 @@
             <Setter Property="Background" Value="#25FFFFFF" />
             <Setter Property="BorderBrush" Value="#45FFFFFF" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="CornerRadius" Value="8" />
             <Setter Property="BoxShadow" Value="0 4 16 0 #10000000" />
         </Style>
 
@@ -33,7 +33,7 @@
             <Setter Property="Background" Value="#30FFFFFF" />
             <Setter Property="BorderBrush" Value="#55FFFFFF" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="CornerRadius" Value="8" />
             <Setter Property="BoxShadow" Value="0 2 10 0 #0C000000" />
         </Style>
 
